@@ -10,15 +10,15 @@ import java.time.LocalDateTime;
  */
 @Data
 public class OpentalkDTO implements Serializable {
-    private final Long id;
-    private final String topic;
-    private final LocalDateTime time;
-    private final String meeting;
-    private final Integer status;
-    private final EmployeeDTO host;
+    private Long id;
+    private String topic;
+    private LocalDateTime time;
+    private String meeting;
+    private Integer status;
+    private EmployeeDTO host;
 
-    private final String fromDate;
-    private final String toDate;
+    private String fromDate;
+    private String toDate;
 
     private PageDTO page;
 }

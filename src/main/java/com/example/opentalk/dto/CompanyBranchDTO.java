@@ -9,7 +9,8 @@ import java.io.Serializable;
  */
 @Data
 public class CompanyBranchDTO implements Serializable {
-    private final Long id;
-    private final String name;
-    private final PageDTO page;
+    private Long id;
+    private String name;
+    private Boolean enable;
+    private PageDTO page;
 }

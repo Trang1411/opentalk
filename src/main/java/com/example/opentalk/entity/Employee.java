@@ -2,6 +2,7 @@ package com.example.opentalk.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "employee")
+@SQLDelete(sql = "UPDATE employee SET enable = false WHERE id = ?")
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +43,7 @@ public class Employee {
     private CompanyBranch companyBranch;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role", referencedColumnName = "id",nullable = false)
+    @JoinColumn(name = "roles", referencedColumnName = "id",nullable = false)
     private Role role;
 
     @Column(name = "enable",nullable = false)
