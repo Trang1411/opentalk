@@ -4,6 +4,7 @@ import com.example.opentalk.dto.OpentalkDTO;
 import com.example.opentalk.entity.Opentalk;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class OpentalkSpecification {
     public Specification<Opentalk> filter(final OpentalkDTO criteria) {
         return (root, query, cb) -> {

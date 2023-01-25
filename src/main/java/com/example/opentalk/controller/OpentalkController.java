@@ -2,12 +2,14 @@ package com.example.opentalk.controller;
 
 import com.example.opentalk.dto.OpentalkDTO;
 import com.example.opentalk.service.OpentalkService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@Slf4j
 @RequestMapping("/opentalk")
 public class OpentalkController {
 

@@ -4,11 +4,13 @@ import com.example.opentalk.dto.EmployeeDTO;
 import com.example.opentalk.entity.Employee;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class EmployeeSpecification {
     public Specification<Employee> filter(final EmployeeDTO criteria) {
         return (root, query, cb) -> {

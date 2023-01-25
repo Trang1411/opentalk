@@ -4,23 +4,25 @@ import com.example.opentalk.constant.DefaultPageEnum;
 import com.example.opentalk.dto.OpentalkDTO;
 import com.example.opentalk.dto.PageDTO;
 import com.example.opentalk.entity.Opentalk;
-import com.example.opentalk.mapper.OpentalkMapper;
 import com.example.opentalk.repository.OpentalkRepository;
 import com.example.opentalk.service.OpentalkService;
 import com.example.opentalk.specification.OpentalkSpecification;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class OpentalkServiceImpl implements OpentalkService {
 
     @Autowired
     private OpentalkRepository opentalkRepository;
 
     @Autowired
-    private OpentalkMapper opentalkMapper;
+    private ModelMapper mapper;
 
     @Autowired
     private OpentalkSpecification opentalkSpecification;
@@ -38,7 +40,7 @@ public class OpentalkServiceImpl implements OpentalkService {
             maxResults = DefaultPageEnum.SIZE.val;
         }
 
-        Page<OpentalkDTO> opentalkPage = opentalkRepository.findAll(opentalkSpecification.filter(criteria), PageRequest.of(selectedPage, maxResults)).map(item -> opentalkMapper.entityToDTO(item));
+        Page<OpentalkDTO> opentalkPage = opentalkRepository.findAll(opentalkSpecification.filter(criteria), PageRequest.of(selectedPage, maxResults)).map(item -> mapper.map(item, OpentalkDTO.class));
 
         criteria.setPage(PageDTO.builder().content(opentalkPage.getContent()).number(opentalkPage.getNumber())
                 .numberOfElements(opentalkPage.getNumberOfElements()).page(opentalkPage.getNumber()).size(opentalkPage.getSize())
@@ -55,14 +57,14 @@ public class OpentalkServiceImpl implements OpentalkService {
             return null;
         }
 
-        return opentalkMapper.entityToDTO(result);
+        return mapper.map(result, OpentalkDTO.class);
     }
 
     @Override
     public Boolean save(OpentalkDTO opentalk) {
         Opentalk opentalkEntity;
 
-        opentalkEntity = opentalkMapper.dtoToEntity(opentalk);
+        opentalkEntity = mapper.map(opentalk, Opentalk.class);
 
         if(opentalk.getId() == null)
             opentalkEntity.setStatus(1);

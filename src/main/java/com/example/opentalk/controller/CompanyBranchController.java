@@ -2,12 +2,14 @@ package com.example.opentalk.controller;
 
 import com.example.opentalk.dto. CompanyBranchDTO;
 import com.example.opentalk.service. CompanyBranchService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@Slf4j
 @RequestMapping("/companyBranch")
 public class CompanyBranchController {
 
@@ -15,8 +17,7 @@ public class CompanyBranchController {
     private CompanyBranchService companyBranchService;
 
     @GetMapping(value="/api/get")
-    @ResponseBody
-    public ResponseEntity<?> get(){
+    public @ResponseBody ResponseEntity<?> get(){
         CompanyBranchDTO data = companyBranchService.get(new CompanyBranchDTO());
 
         if(data == null)
@@ -26,8 +27,7 @@ public class CompanyBranchController {
     }
 
     @PostMapping(value="/api/search")
-    @ResponseBody
-    public ResponseEntity<?> search(@RequestBody CompanyBranchDTO criteria){
+    public @ResponseBody ResponseEntity<?> search(@RequestBody CompanyBranchDTO criteria){
         CompanyBranchDTO data = companyBranchService.get(criteria);
         if(data == null)
             return ResponseEntity.noContent().build();
@@ -36,8 +36,7 @@ public class CompanyBranchController {
     }
 
     @GetMapping(value="/api/get/{id}")
-    @ResponseBody
-    public ResponseEntity<?> findByID(@PathVariable(value = "id") String idParameter){
+    public @ResponseBody ResponseEntity<?> findByID(@PathVariable(value = "id") String idParameter){
         try {
             CompanyBranchDTO data = companyBranchService.findByID(Long.parseLong(idParameter));
             if(data != null)
@@ -51,19 +50,14 @@ public class CompanyBranchController {
     }
 
     @PostMapping(value="/api/save")
-    @ResponseBody
-    public ResponseEntity<?> save(CompanyBranchDTO companyBranch){
-        if(!companyBranchService.save(companyBranch))
-            return ResponseEntity.unprocessableEntity().build();
-
-        return ResponseEntity.ok("Lưu Thông Tin Thành Công");
+    public @ResponseBody ResponseEntity<Boolean> save(@RequestBody CompanyBranchDTO companyBranch){
+        return ResponseEntity.ok(Boolean.TRUE.equals(companyBranchService.save(companyBranch)));
     }
 
     @DeleteMapping(value="/api/delete")
-    @ResponseBody
-    public ResponseEntity<?> delete(String idParameter){
+    public @ResponseBody ResponseEntity<?> delete(String idParameter){
         try {
-            if(companyBranchService.delete(Long.parseLong(idParameter)))
+            if(Boolean.TRUE.equals(companyBranchService.delete(Long.parseLong(idParameter))))
                 ResponseEntity.ok("Xóa Thông Tin Thành Công");
         } catch (NumberFormatException ignored) {
 

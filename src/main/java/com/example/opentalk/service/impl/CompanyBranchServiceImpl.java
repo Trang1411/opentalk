@@ -4,27 +4,30 @@ import com.example.opentalk.constant.DefaultPageEnum;
 import com.example.opentalk.dto.CompanyBranchDTO;
 import com.example.opentalk.dto.PageDTO;
 import com.example.opentalk.entity.CompanyBranch;
-import com.example.opentalk.mapper.CompanyBranchMapper;
 import com.example.opentalk.repository.CompanyBranchRepository;
 import com.example.opentalk.service.CompanyBranchService;
 import com.example.opentalk.specification.CompanyBranchSpecification;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class CompanyBranchServiceImpl implements CompanyBranchService {
 
     @Autowired
     private CompanyBranchRepository companyBranchRepository;
 
     @Autowired
-    private CompanyBranchMapper companyBranchMapper;
+    private ModelMapper mapper;
 
     @Autowired
     private CompanyBranchSpecification companyBranchSpecification;
+
+
 
     @Override
     public CompanyBranchDTO get(CompanyBranchDTO criteria) {
@@ -39,7 +42,7 @@ public class CompanyBranchServiceImpl implements CompanyBranchService {
             maxResults = DefaultPageEnum.SIZE.val;
         }
 
-        Page<CompanyBranchDTO> companyBranchPage = companyBranchRepository.findAll(companyBranchSpecification.filter(criteria), PageRequest.of(selectedPage, maxResults)).map(item -> companyBranchMapper.entityToDTO(item));
+        Page<CompanyBranchDTO> companyBranchPage = companyBranchRepository.findAll(companyBranchSpecification.filter(criteria), PageRequest.of(selectedPage, maxResults)).map(item -> mapper.map(item, CompanyBranchDTO.class));
 
         criteria.setPage(PageDTO.builder().content(companyBranchPage.getContent()).number(companyBranchPage.getNumber())
                 .numberOfElements(companyBranchPage.getNumberOfElements()).page(companyBranchPage.getNumber()).size(companyBranchPage.getSize())
@@ -57,15 +60,16 @@ public class CompanyBranchServiceImpl implements CompanyBranchService {
             return null;
         }
 
-        return companyBranchMapper.entityToDTO(result);
+        return mapper.map(result, CompanyBranchDTO.class);
     }
 
     @Override
     public Boolean save(CompanyBranchDTO companyBranch) {
+        log.info(String.valueOf(companyBranch));
         CompanyBranch companyBranchEntity;
 
-        companyBranchEntity = companyBranchMapper.dtoToEntity(companyBranch);
-
+        companyBranchEntity = mapper.map(companyBranch, CompanyBranch.class);
+        log.info(String.valueOf(companyBranchEntity));
         companyBranchEntity.setEnable(true);
 
         return companyBranchRepository.save(companyBranchEntity).getId() != null;
